@@ -42,7 +42,19 @@ class Folder:
         self.upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.uploader = uploader
         self.auth_hashes = []
-
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "contents": {k: v.to_dict() if hasattr(v, "to_dict") else v for k, v in self.contents.items()},
+            "id": self.id,
+            "type": self.type,
+            "trash": self.trash,
+            "path": self.path,
+            "upload_date": self.upload_date,
+            "uploader": self.uploader,
+            "auth_hashes": self.auth_hashes,
+        }
     @classmethod
     def from_dict(cls, data):
         # Ensure path is not missing or empty
@@ -117,25 +129,25 @@ class File:
             "duration": self.duration,
         }
 
-@classmethod
-def from_dict(cls, data):
+    @classmethod
+    def from_dict(cls, data):
     # Ensure path is not missing or empty
-    path = data.get("path", "")
-    return cls(
-        name=data["name"],
-        file_id=data["file_id"],
-        size=data["size"],
-        path=path,
-        rentry_link=data["rentry_link"],
-        paste_url=data["paste_url"],
-        uploader=data["uploader"],
-        audio=data["audio"],
-        subtitle=data["subtitle"],
-        resolution=data["resolution"],
-        codec=data["codec"],
-        bit_depth=data["bit_depth"],
-        duration=data["duration"],
-    )
+        path = data.get("path", "")
+        return cls(
+            name=data["name"],
+            file_id=data["file_id"],
+            size=data["size"],
+            path=path,
+            rentry_link=data["rentry_link"],
+            paste_url=data["paste_url"],
+            uploader=data["uploader"],
+            audio=data["audio"],
+            subtitle=data["subtitle"],
+            resolution=data["resolution"],
+            codec=data["codec"],
+            bit_depth=data["bit_depth"],
+            duration=data["duration"],
+        )
 
 class NewDriveData:
     def __init__(self, contents: dict, used_ids: list) -> None:
