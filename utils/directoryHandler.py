@@ -33,8 +33,6 @@ class Folder:
             self.path = "/"  # Ensure root folder has a valid path
         else:
             self.id = getRandomID()
-            # Ensure path is not empty
-            self.path = path if path else "/"
             # Remove trailing slash if present
             self.path = ("/" + path.strip("/") + "/").replace("//", "/")
         self.type = "folder"
@@ -58,7 +56,7 @@ class Folder:
     @classmethod
     def from_dict(cls, data):
         # Ensure path is not missing or empty
-        path = data.get("path", "")
+        path = data.get("path", "/")
         folder = cls(data["name"], path, data["uploader"])
         folder.contents = {
             k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v)
@@ -181,7 +179,7 @@ class NewDriveData:
 
     # Create the folder
         folder = Folder(name, path, uploader)
-
+        print("New some path ", path)
         if path == "/":
             directory_folder: Folder = self.contents[path]
             directory_folder.contents[folder.id] = folder
@@ -190,6 +188,7 @@ class NewDriveData:
             directory_folder: Folder = self.contents["/"]
             for path in paths:
                 directory_folder = directory_folder.contents[path]
+                print("directory folder ", directory_folder)
             directory_folder.contents[folder.id] = folder
 
         self.save()
