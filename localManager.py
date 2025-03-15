@@ -48,10 +48,13 @@ def get_all_files(root_folder):
 # Get cloud path for a folder with the given name under a given cloud parent path.
 def getCpath(name, cparent):
     from utils.directoryHandler import DRIVE_DATA
-
+    print("cparent: ", cparent)
     try:
         folder_data = DRIVE_DATA.get_directory2(cparent)
+        print("folder 1 ", folder_data)
         folder_data = convert_class_to_dict(folder_data, isObject=True, showtrash=False)
+        print("folder 2 ", folder_data)
+        print("folder items: ", folder_data["contents"].items())
         for id, data in folder_data["contents"].items():
             if data["name"] == name:
                 logger.info(
