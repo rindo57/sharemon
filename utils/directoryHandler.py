@@ -192,6 +192,7 @@ class NewDriveData:
             directory_folder.contents[folder.id] = folder
 
         self.save()
+        return folder.path + folder.id
 
     def new_file(self, path: str, name: str, file_id: int, size: int, rentry_link: str, paste_url: str, uploader: str, audio: str, subtitle: str, resolution: str, codec: str, bit_depth: str, duration: str) -> None:
         logger.info(f"Creating new file {name} in {path} by {uploader}")
