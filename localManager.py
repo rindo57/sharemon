@@ -50,7 +50,7 @@ def getCpath(name, cparent):
     from utils.directoryHandler import DRIVE_DATA
 
     try:
-        folder_data = DRIVE_DATA.get_directory(cparent)
+        folder_data = DRIVE_DATA.get_directory2(cparent)
         folder_data = convert_class_to_dict(folder_data, isObject=True, showtrash=False)
         for id, data in folder_data["contents"].items():
             if data["name"] == name:
