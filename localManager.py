@@ -11,6 +11,7 @@ import logging
 from config import BOT_TOKENS
 from utils.clients import initialize_clients
 from utils.directoryHandler import getRandomID
+from utils.extra import convert_class_to_dict
 from utils.uploader import start_file_uploader2
 
 # Configure logging: Log messages will be output to the console and saved in manager.log
@@ -50,7 +51,7 @@ def getCpath(name, cparent):
 
     try:
         folder_data = DRIVE_DATA.get_directory(cparent)
-        folder_data = folder_data.to_dict()  # Use the to_dict method
+        folder_data = convert_class_to_dict(folder_data, isObject=True, showtrash=False)
         for id, data in folder_data["contents"].items():
             if data["name"] == name:
                 logger.info(
@@ -202,9 +203,7 @@ async def start():
         )
     else:
         logger.info(f"Creating root folder '{root_name}' in cloud")
-        uploader = "XenZen"
-        DRIVE_DATA.new_folder("/", root_name, uploader)
-        root_cpath = f"/{root_name}/"
+        root_cpath = DRIVE_DATA.new_folder("/", root_name)
         logger.info(f"Created root folder '{root_name}' in cloud at {root_cpath}")
 
     # Upload files in the root local folder.
@@ -214,7 +213,7 @@ async def start():
     def create_folders(lpath, cpath):
         folders = get_all_folders(lpath)
         print("folders", folders)
-        uploader = "XenZen"
+        uploader="XenZen"
         for new_lpath in folders:
             folder_name = os.path.basename(new_lpath)
             print("folder name ", folder_name)
@@ -223,8 +222,8 @@ async def start():
                 logger.info(
                     f"Creating cloud folder for local folder '{folder_name}' under {cpath}"
                 )
-                DRIVE_DATA.new_folder(cpath, folder_name, uploader)
-                new_cpath = f"{cpath}{folder_name}/"
+                
+                new_cpath = DRIVE_DATA.new_folder(cpath, folder_name, uploader)
                 logger.info(f"Created cloud folder '{folder_name}' at {new_cpath}")
             # Schedule uploads for files in the current folder.
             upload_files(new_lpath, new_cpath)
@@ -250,6 +249,7 @@ async def start():
     await progress_task
 
     logger.info("All uploads completed successfully.")
+    logger.info("Backup completed successfully.")
     logger.info("Exiting...")
     await asyncio.sleep(1)
     sys.exit()
