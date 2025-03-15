@@ -96,7 +96,7 @@ class File:
         self.type = "file"
         self.trash = False
         # Handle empty path
-        self.path = ("/" + path.strip("/") + "/").replace("//", "/")
+        self.path = path[:-1] if path[-1] == "/" else path
         self.upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.rentry_link = rentry_link
         self.paste_url = paste_url
