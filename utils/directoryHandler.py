@@ -38,6 +38,30 @@ class Folder:
         self.uploader = uploader
         self.auth_hashes = []
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "contents": {k: v.to_dict() if hasattr(v, "to_dict") else v for k, v in self.contents.items()},
+            "id": self.id,
+            "type": self.type,
+            "trash": self.trash,
+            "path": self.path,
+            "upload_date": self.upload_date,
+            "uploader": self.uploader,
+            "auth_hashes": self.auth_hashes,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        folder = cls(data["name"], data["path"], data["uploader"])
+        folder.contents = {k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v) for k, v in data["contents"].items()}
+        folder.id = data["id"]
+        folder.trash = data["trash"]
+        folder.upload_date = data["upload_date"]
+        folder.auth_hashes = data["auth_hashes"]
+        return folder
+
+
 class File:
     def __init__(
         self,
@@ -45,18 +69,17 @@ class File:
         file_id: int,
         size: int,
         path: str,
-        rentry_link: str, 
+        rentry_link: str,
         paste_url: str,
-        uploader: str, 
+        uploader: str,
         audio: str,
         subtitle: str,
         resolution: str,
         codec: str,
         bit_depth: str,
-        duration: str
+        duration: str,
     ) -> None:
         self.name = name
-        self.type = type
         self.file_id = file_id
         self.id = getRandomID()
         self.size = size
@@ -74,14 +97,65 @@ class File:
         self.bit_depth = bit_depth
         self.duration = duration
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "file_id": self.file_id,
+            "id": self.id,
+            "size": self.size,
+            "type": self.type,
+            "trash": self.trash,
+            "path": self.path,
+            "upload_date": self.upload_date,
+            "rentry_link": self.rentry_link,
+            "paste_url": self.paste_url,
+            "uploader": self.uploader,
+            "audio": self.audio,
+            "subtitle": self.subtitle,
+            "resolution": self.resolution,
+            "codec": self.codec,
+            "bit_depth": self.bit_depth,
+            "duration": self.duration,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data["name"],
+            file_id=data["file_id"],
+            size=data["size"],
+            path=data["path"],
+            rentry_link=data["rentry_link"],
+            paste_url=data["paste_url"],
+            uploader=data["uploader"],
+            audio=data["audio"],
+            subtitle=data["subtitle"],
+            resolution=data["resolution"],
+            codec=data["codec"],
+            bit_depth=data["bit_depth"],
+            duration=data["duration"],
+        )
+
 class NewDriveData:
     def __init__(self, contents: dict, used_ids: list) -> None:
         self.contents = contents
         self.used_ids = used_ids
         self.isUpdated = False
 
+    def to_dict(self):
+        return {
+            "contents": {k: v.to_dict() for k, v in self.contents.items()},
+            "used_ids": self.used_ids,
+            "isUpdated": self.isUpdated,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        contents = {k: Folder.from_dict(v) for k, v in data["contents"].items()}
+        return cls(contents, data["used_ids"])
+
     def save(self) -> None:
-        drive_data_collection.replace_one({}, self.__dict__, upsert=True)
+        drive_data_collection.replace_one({}, self.to_dict(), upsert=True)
         self.isUpdated = True
 
     def new_folder(self, path: str, name: str, uploader: str)-> None:
@@ -334,7 +408,7 @@ async def loadDriveData():
     # Load data from MongoDB
     data = drive_data_collection.find_one({})
     if data:
-        DRIVE_DATA = NewDriveData(data['contents'], data['used_ids'])
+        DRIVE_DATA = NewDriveData.from_dict(data)
         logger.info("Drive data loaded from MongoDB")
     else:
         logger.info("Creating new drive.data file")
