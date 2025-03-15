@@ -23,49 +23,41 @@ def getRandomID():
 def get_current_utc_time():
     return datetime.now(timezone.utc).strftime("Date - %Y-%m-%d | Time - %H:%M:%S")
 
+  
 class Folder:
     def __init__(self, name: str, path: str, uploader: str) -> None:
         self.name = name
-        self.contents = {}
+        self.contents = {}  # Initialize contents as a dictionary
         if name == "/":
             self.id = "root"
+            self.path = "/"  # Ensure root folder has a valid path
         else:
             self.id = getRandomID()
+            # Ensure path is not empty
+            self.path = path if path else "/"
+            # Remove trailing slash if present
+            self.path = ("/" + path.strip("/") + "/").replace("//", "/")
         self.type = "folder"
         self.trash = False
-        # Handle empty path
-        self.path = ("/" + path.strip("/") + "/").replace("//", "/")
         self.upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.uploader = uploader
         self.auth_hashes = []
 
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "contents": {k: v.to_dict() if hasattr(v, "to_dict") else v for k, v in self.contents.items()},
-            "id": self.id,
-            "type": self.type,
-            "trash": self.trash,
-            "path": self.path,
-            "upload_date": self.upload_date,
-            "uploader": self.uploader,
-            "auth_hashes": self.auth_hashes,
+    @classmethod
+    def from_dict(cls, data):
+        # Ensure path is not missing or empty
+        path = data.get("path", "")
+        folder = cls(data["name"], path, data["uploader"])
+        folder.contents = {
+            k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v)
+            for k, v in data["contents"].items()
         }
+        folder.id = data["id"]
+        folder.trash = data["trash"]
+        folder.upload_date = data["upload_date"]
+        folder.auth_hashes = data.get("auth_hashes", [])
+        return folder
 
-@classmethod
-def from_dict(cls, data):
-    # Ensure path is not missing or empty
-    path = data.get("path", "")
-    folder = cls(data["name"], path, data["uploader"])
-    folder.contents = {
-        k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v)
-        for k, v in data["contents"].items()
-    }
-    folder.id = data["id"]
-    folder.trash = data["trash"]
-    folder.upload_date = data["upload_date"]
-    folder.auth_hashes = data.get("auth_hashes", [])
-    return folder
 
 
 class File:
@@ -161,17 +153,23 @@ class NewDriveData:
     @classmethod
     def from_dict(cls, data):
         # Ensure contents is not missing or empty
-        contents = data.get("contents", {})
+        contents = {k: Folder.from_dict(v) for k, v in data["contents"].items()}
         return cls(contents, data["used_ids"])
         
     def save(self) -> None:
         drive_data_collection.replace_one({}, self.to_dict(), upsert=True)
         self.isUpdated = True
 
-    def new_folder(self, path: str, name: str, uploader: str)-> None:
+    def new_folder(self, path: str, name: str, uploader: str) -> None:
         logger.info(f"Creating new folder {name} in {path} by {uploader}")
 
+    # Ensure path is not empty
+        if not path:
+            path = "/"
+
+    # Create the folder
         folder = Folder(name, path, uploader)
+
         if path == "/":
             directory_folder: Folder = self.contents[path]
             directory_folder.contents[folder.id] = folder
