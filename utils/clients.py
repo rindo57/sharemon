@@ -89,7 +89,7 @@ async def initialize_clients():
     logger.info("Clients Initialized")
 
     # Load the drive data from MongoDB
-    await loadDriveData()
+    asyncio.create_task(loadDriveData())
 
 
 def get_client(premium_required=False) -> Client:
