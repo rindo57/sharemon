@@ -424,19 +424,27 @@ BOT_MODE: NewBotMode = None
 async def loadDriveData():
     global DRIVE_DATA, BOT_MODE
 
-    # Load data from MongoDB
-    data = drive_data_collection.find_one({})
-    if data:
-        DRIVE_DATA = NewDriveData.from_dict(data)
-        logger.info("Drive data loaded from MongoDB")
-    else:
-        logger.info("Creating new drive.data file")
-        DRIVE_DATA = NewDriveData({"/": Folder("/", "/", "root")}, [])
-        DRIVE_DATA.save()
+    while True:
+        try:
+            # Load data from MongoDB
+            data = drive_data_collection.find_one({})
+            if data:
+                DRIVE_DATA = NewDriveData.from_dict(data)
+                logger.info("Drive data loaded from MongoDB")
+            else:
+                logger.info("Creating new drive.data file")
+                DRIVE_DATA = NewDriveData({"/": Folder("/", "/", "root")}, [])
+                DRIVE_DATA.save()
 
-    # Start Bot Mode
-    if config.MAIN_BOT_TOKEN:
-        from utils.bot_mode import start_bot_mode
+            # Start Bot Mode (if not already started)
+            if config.MAIN_BOT_TOKEN and BOT_MODE is None:
+                from utils.bot_mode import start_bot_mode
 
-        BOT_MODE = NewBotMode(DRIVE_DATA)
-        await start_bot_mode(DRIVE_DATA, BOT_MODE)
+                BOT_MODE = NewBotMode(DRIVE_DATA)
+                await start_bot_mode(DRIVE_DATA, BOT_MODE)
+
+        except Exception as e:
+            logger.error(f"Error loading drive data: {e}")
+
+        # Wait for 60 seconds before reloading
+        await asyncio.sleep(60)
