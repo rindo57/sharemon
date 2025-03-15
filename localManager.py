@@ -206,7 +206,7 @@ async def start():
         )
     else:
         logger.info(f"Creating root folder '{root_name}' in cloud")
-        root_cpath = DRIVE_DATA.new_folder("/", root_name)
+        root_cpath = DRIVE_DATA.new_folder("/", root_name, uploader)
         logger.info(f"Created root folder '{root_name}' in cloud at {root_cpath}")
 
     # Upload files in the root local folder.
