@@ -33,7 +33,8 @@ class Folder:
             self.id = getRandomID()
         self.type = "folder"
         self.trash = False
-        self.path = path[:-1] if path[-1] == "/" else path
+        # Handle empty path
+        self.path = path[:-1] if path and path[-1] == "/" else path
         self.upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.uploader = uploader
         self.auth_hashes = []
@@ -51,15 +52,20 @@ class Folder:
             "auth_hashes": self.auth_hashes,
         }
 
-    @classmethod
-    def from_dict(cls, data):
-        folder = cls(data["name"], data["path"], data["uploader"])
-        folder.contents = {k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v) for k, v in data["contents"].items()}
-        folder.id = data["id"]
-        folder.trash = data["trash"]
-        folder.upload_date = data["upload_date"]
-        folder.auth_hashes = data["auth_hashes"]
-        return folder
+@classmethod
+def from_dict(cls, data):
+    # Ensure path is not missing or empty
+    path = data.get("path", "")
+    folder = cls(data["name"], path, data["uploader"])
+    folder.contents = {
+        k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v)
+        for k, v in data["contents"].items()
+    }
+    folder.id = data["id"]
+    folder.trash = data["trash"]
+    folder.upload_date = data["upload_date"]
+    folder.auth_hashes = data.get("auth_hashes", [])
+    return folder
 
 
 class File:
@@ -85,7 +91,8 @@ class File:
         self.size = size
         self.type = "file"
         self.trash = False
-        self.path = path[:-1] if path[-1] == "/" else path
+        # Handle empty path
+        self.path = path[:-1] if path and path[-1] == "/" else path
         self.upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.rentry_link = rentry_link
         self.paste_url = paste_url
@@ -118,23 +125,25 @@ class File:
             "duration": self.duration,
         }
 
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            name=data["name"],
-            file_id=data["file_id"],
-            size=data["size"],
-            path=data["path"],
-            rentry_link=data["rentry_link"],
-            paste_url=data["paste_url"],
-            uploader=data["uploader"],
-            audio=data["audio"],
-            subtitle=data["subtitle"],
-            resolution=data["resolution"],
-            codec=data["codec"],
-            bit_depth=data["bit_depth"],
-            duration=data["duration"],
-        )
+@classmethod
+def from_dict(cls, data):
+    # Ensure path is not missing or empty
+    path = data.get("path", "")
+    return cls(
+        name=data["name"],
+        file_id=data["file_id"],
+        size=data["size"],
+        path=path,
+        rentry_link=data["rentry_link"],
+        paste_url=data["paste_url"],
+        uploader=data["uploader"],
+        audio=data["audio"],
+        subtitle=data["subtitle"],
+        resolution=data["resolution"],
+        codec=data["codec"],
+        bit_depth=data["bit_depth"],
+        duration=data["duration"],
+    )
 
 class NewDriveData:
     def __init__(self, contents: dict, used_ids: list) -> None:
@@ -151,9 +160,10 @@ class NewDriveData:
 
     @classmethod
     def from_dict(cls, data):
-        contents = {k: Folder.from_dict(v) for k, v in data["contents"].items()}
+        # Ensure contents is not missing or empty
+        contents = data.get("contents", {})
         return cls(contents, data["used_ids"])
-
+        
     def save(self) -> None:
         drive_data_collection.replace_one({}, self.to_dict(), upsert=True)
         self.isUpdated = True
