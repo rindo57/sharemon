@@ -1,5 +1,5 @@
 root_folder = "batch"  # Path of the local folder to upload
-root_name = "yoho"  # Name of the root folder in the TGDrive
+root_name = "yaho"  # Name of the root folder in the TGDrive
 
 import os
 import sys
@@ -12,7 +12,7 @@ from config import BOT_TOKENS
 from utils.clients import initialize_clients
 from utils.directoryHandler import getRandomID
 from utils.extra import convert_class_to_dict
-from utils.uploader import start_file_uploader
+from utils.uploader import start_file_uploader2
 
 # Configure logging: Log messages will be output to the console and saved in manager.log
 logging.basicConfig(
@@ -48,9 +48,9 @@ def get_all_files(root_folder):
 # Get cloud path for a folder with the given name under a given cloud parent path.
 def getCpath(name, cparent):
     from utils.directoryHandler import DRIVE_DATA
-    print("cparent: ", cparent)
+
     try:
-        folder_data = DRIVE_DATA.get_directory2(cparent)
+        folder_data = DRIVE_DATA.get_directory(cparent)
         print("folder 1 ", folder_data)
         folder_data = convert_class_to_dict(folder_data, isObject=True, showtrash=False)
         print("folder 2 ", folder_data)
@@ -85,7 +85,7 @@ async def worker():
         logger.info(f"Starting upload for '{fname}' with id {id}")
         try:
             uploader = "XenZen"
-            await start_file_uploader(file, id, cpath, fname, file_size, uploader)
+            await start_file_uploader2(file, id, cpath, fname, file_size, uploader)
             await asyncio.sleep(11)
         except Exception as e:
             with open("failed.txt", "a") as f:
@@ -205,9 +205,8 @@ async def start():
             f"Root folder '{root_name}' already exists in cloud at {root_cpath}"
         )
     else:
-        uploader = "XenZen"
         logger.info(f"Creating root folder '{root_name}' in cloud")
-        root_cpath = DRIVE_DATA.new_folder("/", root_name, uploader)
+        root_cpath = DRIVE_DATA.new_folder("/", root_name)
         logger.info(f"Created root folder '{root_name}' in cloud at {root_cpath}")
 
     # Upload files in the root local folder.
@@ -219,11 +218,10 @@ async def start():
         print("folders", folders)
         uploader="XenZen"
         for new_lpath in folders:
+            print("cpath ", cpath)
             folder_name = os.path.basename(new_lpath)
             print("folder name ", folder_name)
-            print("cpath ", cpath)
             new_cpath = getCpath(folder_name, cpath)
-            print("new cpath ", new_cpath)
             if not new_cpath:
                 logger.info(
                     f"Creating cloud folder for local folder '{folder_name}' under {cpath}"
