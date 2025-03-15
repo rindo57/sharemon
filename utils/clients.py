@@ -1,7 +1,7 @@
 import asyncio, config
 from pathlib import Path
 from pyrogram import Client
-from utils.directoryHandler import backup_drive_data, loadDriveData
+from utils.directoryHandler import loadDriveData  # Removed backup_drive_data
 from utils.logger import Logger
 
 logger = Logger(__name__)
@@ -88,11 +88,8 @@ async def initialize_clients():
 
     logger.info("Clients Initialized")
 
-    # Load the drive data
+    # Load the drive data from MongoDB
     await loadDriveData()
-
-    # Start the backup drive data task
-    asyncio.create_task(backup_drive_data())
 
 
 def get_client(premium_required=False) -> Client:
