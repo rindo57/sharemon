@@ -220,7 +220,9 @@ async def start():
         for new_lpath in folders:
             folder_name = os.path.basename(new_lpath)
             print("folder name ", folder_name)
+            print("cpath ", cpath)
             new_cpath = getCpath(folder_name, cpath)
+            print("new cpath ", new_cpath)
             if not new_cpath:
                 logger.info(
                     f"Creating cloud folder for local folder '{folder_name}' under {cpath}"
