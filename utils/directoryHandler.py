@@ -433,6 +433,7 @@ async def loadDriveData():
             data = drive_data_collection.find_one({})
             if data:
                 DRIVE_DATA = NewDriveData.from_dict(data)
+                print("DRIVE DATA: ", DRIVE_DATA)
                 logger.info("Drive data loaded from MongoDB")
             else:
                 logger.info("Creating new drive.data file")
@@ -450,4 +451,4 @@ async def loadDriveData():
             logger.error(f"Error loading drive data: {e}")
 
         # Wait for 60 seconds before reloading
-        await asyncio.sleep(60)
+        await asyncio.sleep(45)
