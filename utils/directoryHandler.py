@@ -75,6 +75,7 @@ class File:
         self,
         name: str,
         file_id: int,
+        id: int,
         size: int,
         path: str,
         rentry_link: str,
@@ -89,7 +90,7 @@ class File:
     ) -> None:
         self.name = name
         self.file_id = file_id
-        self.id = getRandomID()
+        self.id = id
         self.size = size
         self.type = "file"
         self.trash = False
@@ -196,8 +197,8 @@ class NewDriveData:
 
     def new_file(self, path: str, name: str, file_id: int, size: int, rentry_link: str, paste_url: str, uploader: str, audio: str, subtitle: str, resolution: str, codec: str, bit_depth: str, duration: str) -> None:
         logger.info(f"Creating new file {name} in {path} by {uploader}")
-
-        file = File(name, file_id, size, path, rentry_link, paste_url, uploader, audio, subtitle, resolution, codec, bit_depth, duration)
+        id = getRandomID()
+        file = File(name, file_id, id, size, path, rentry_link, paste_url, uploader, audio, subtitle, resolution, codec, bit_depth, duration)
         if path == "/":
             directory_folder: Folder = self.contents[path]
             directory_folder.contents[file.id] = file
