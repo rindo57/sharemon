@@ -74,7 +74,7 @@ class File:
         self,
         name: str,
         file_id: int,
-        id: int,
+        id: str,
         size: int,
         path: str,
         rentry_link: str,
@@ -134,6 +134,7 @@ class File:
         return cls(
             name=data["name"],
             file_id=data["file_id"],
+            id=data["id"],
             size=data["size"],
             path=path,
             rentry_link=data["rentry_link"],
