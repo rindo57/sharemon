@@ -64,6 +64,7 @@ class Folder:
         folder.id = data["id"]
         folder.trash = data["trash"]
         folder.upload_date = data["upload_date"]
+        folder.uploader = data["uploader"]
         folder.auth_hashes = data.get("auth_hashes", [])
         return folder
 
