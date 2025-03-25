@@ -438,7 +438,7 @@ async def loadDriveData():
                 logger.info("Drive data loaded from MongoDB")
             else:
                 logger.info("Creating new drive.data file")
-                DRIVE_DATA = NewDriveData({"/": Folder("/", "/", "root")}, [])
+                DRIVE_DATA = NewDriveData({"/": Folder("/", "ad78asfas90ad5", "/", "root")}, [])
                 DRIVE_DATA.save()
 
             # Start Bot Mode (if not already started)
