@@ -56,15 +56,15 @@ class Folder:
     def from_dict(cls, data):
         # Ensure path is not missing or empty
         path = data.get("path", "/")
-        folder = cls(data["name"], path, data["uploader"])
+        folder = cls(data["name"], data["id"], path, data["uploader"])
         folder.contents = {
             k: Folder.from_dict(v) if v["type"] == "folder" else File.from_dict(v)
             for k, v in data["contents"].items()
         }
-        folder.id = data["id"]
+       # folder.id = data["id"]
         folder.trash = data["trash"]
         folder.upload_date = data["upload_date"]
-        folder.uploader = data["uploader"]
+        #folder.uploader = data["uploader"]
         folder.auth_hashes = data.get("auth_hashes", [])
         return folder
 
