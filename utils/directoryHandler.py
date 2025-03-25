@@ -24,14 +24,14 @@ def get_current_utc_time():
 
   
 class Folder:
-    def __init__(self, name: str, path: str, uploader: str) -> None:
+    def __init__(self, name: str, id: str, path: str, uploader: str) -> None:
         self.name = name
         self.contents = {}  # Initialize contents as a dictionary
         if name == "/":
             self.id = "root"
             self.path = "/"  # Ensure root folder has a valid path
         else:
-            self.id = getRandomID()
+            self.id = id
             # Remove trailing slash if present
             self.path = ("/" + path.strip("/") + "/").replace("//", "/")
         self.type = "folder"
@@ -179,7 +179,8 @@ class NewDriveData:
             path = "/"
 
     # Create the folder
-        folder = Folder(name, path, uploader)
+        id =  getRandomID()
+        folder = Folder(name, id, path, uploader)
         print("New some path ", path)
         if path == "/":
             directory_folder: Folder = self.contents[path]
