@@ -165,7 +165,7 @@ async def initialize_clients2():
         logger.info("No Premium Clients Were Initialized")
 
     logger.info("Clients Initialized")
-    await loadDriveData()
+ 
 
 
 def get_client(premium_required=False) -> Client:
