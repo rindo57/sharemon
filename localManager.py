@@ -9,7 +9,7 @@ from tqdm import tqdm
 import logging
 
 from config import BOT_TOKENS
-from utils.clients import initialize_clients
+from utils.clients import initialize_clients2
 from utils.directoryHandler import getRandomID
 from utils.extra import convert_class_to_dict
 from utils.uploader import start_file_uploader2
@@ -149,7 +149,7 @@ async def limited_uploader_progress():
 
 async def start():
     logger.info("Initializing clients...")
-    await initialize_clients()
+    await initialize_clients2()
 
     DRIVE_DATA = None
     while not DRIVE_DATA:
