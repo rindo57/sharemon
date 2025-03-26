@@ -13,12 +13,12 @@ client = MongoClient(mongo_uri)
 db = client.tg_drive  # Database name
 drive_data_collection = db.drive_data  # Collection name
 
-def getRandomID():
-    id = "".join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=15))
-    if not drive_data_collection.find_one({"used_ids": id}):
-        drive_data_collection.update_one({}, {"$push": {"used_ids": id}})
-        return id
-
+def getRandomID(length=15):
+    while True:
+        id = "".join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=length))
+        if not drive_data_collection.find_one({"used_ids": id}):
+            drive_data_collection.update_one({}, {"$push": {"used_ids": id}})
+            return id
 def get_current_utc_time():
     return datetime.now(timezone.utc).strftime("Date - %Y-%m-%d | Time - %H:%M:%S")
 
