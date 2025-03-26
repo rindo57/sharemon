@@ -455,7 +455,7 @@ async def loadDriveData():
         await asyncio.sleep(45)
 
 async def loadDriveData2():
-    global DRIVE_DATA, BOT_MODE
+    global DRIVE_DATA
 
     try:
         # Load data from MongoDB
@@ -468,13 +468,6 @@ async def loadDriveData2():
             logger.info("Creating new drive.data file")
             DRIVE_DATA = NewDriveData({"/": Folder("/", "ad78asfas90ad5", "/", "root")}, [])
             DRIVE_DATA.save()
-
-        # Start Bot Mode (if not already started)
-        if config.MAIN_BOT_TOKEN and BOT_MODE is None:
-            from utils.bot_mode import start_bot_mode
-
-            BOT_MODE = NewBotMode(DRIVE_DATA)
-            await start_bot_mode(DRIVE_DATA, BOT_MODE)
 
     except Exception as e:
         logger.error(f"Error loading drive data: {e}")
