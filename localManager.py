@@ -199,7 +199,7 @@ async def start():
 
 
     # Create the root folder in the cloud if it does not exist.
-    root_cpath = getCpath(root_name, "/adrdgjnDc2gtwEQ/")
+    root_cpath = getCpath(root_name, "/")
     if root_cpath:
         logger.info(
             f"Root folder '{root_name}' already exists in cloud at {root_cpath}"
