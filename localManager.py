@@ -1,4 +1,4 @@
-root_folder = "batch"  # Path of the local folder to upload
+root_folder = "batch1"  # Path of the local folder to upload
 root_name = "Anime"  # Name of the root folder in the TGDrive
 
 import os
