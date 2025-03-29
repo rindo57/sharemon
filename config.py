@@ -14,7 +14,7 @@ BOT_TOKENS = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7Nclxa
 BOT_TOKENS = [token.strip() for token in BOT_TOKENS if token.strip() != ""]
 BOT_TOKENSX = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ").strip(", ").split(",")
 #BOT_TOKENS = os.getenv("BOT_TOKENS", "7341876935:AAGA0OsJjpGgWHnGK_MKMWoWpKRfkDgushI").strip(", ").split(",")
-BOT_TOKENSX = [token.strip() for token in BOT_TOKENS if token.strip() != ""]
+BOT_TOKENSX = [token.strip() for token in BOT_TOKENSX if token.strip() != ""]
 
 # List of Premium Telegram Account Pyrogram String Sessions used for file upload/download operations
 STRING_SESSIONS = os.getenv("STRING_SESSIONS", "").strip(", ").split(",")
