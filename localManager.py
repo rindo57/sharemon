@@ -1,5 +1,5 @@
 root_folder = "batch1"  # Path of the local folder to upload
-root_name = "kami"  # Name of the root folder in the TGDrive
+root_name = "test"  # Name of the root folder in the TGDrive
 
 import os
 import sys
@@ -158,7 +158,7 @@ async def start():
         await asyncio.sleep(3)
         logger.info("Waiting for DRIVE_DATA to be initialized...")
 
-    max_concurrent_tasks = 1
+    max_concurrent_tasks = len(BOT_TOKENS)
     logger.info(f"Maximum concurrent upload tasks set to: {max_concurrent_tasks}")
 
     global RUNNING_IDS, TOTAL_UPLOAD
