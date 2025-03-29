@@ -9,7 +9,7 @@ API_ID=10247139
 API_HASH="96b46175824223a33737657ab943fd6a"
 
 # List of Telegram bot tokens used for file upload/download operations
-BOT_TOKENS = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ, 8041824577:AAGSvtr0zs5QYTSvtFdfg_0-yPLmGpnOZtE, 8011406064:AAGnj7QXMKZoGCU2hpcXmfyj9VahagDhUjU, 7997139947:AAGO65cenV2FdkCsi8VqWNGTx5IA7GpND2o, 7728065653:AAEYYuw8vxPXovb4ImEI2FqEzV8jFqiEtVE").strip(", ").split(",")
+BOT_TOKENS = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ, 8041824577:AAGSvtr0zs5QYTSvtFdfg_0-yPLmGpnOZtE, 8011406064:AAGnj7QXMKZoGCU2hpcXmfyj9VahagDhUjU, 7997139947:AAGO65cenV2FdkCsi8VqWNGTx5IA7GpND2o, 7728065653:AAEYYuw8vxPXovb4ImEI2FqEzV8jFqiEtVE, 8081002376:AAGvj-wBC_4EWKUu_XT_F-rDL6nwV1LAERs").strip(", ").split(",")
 #BOT_TOKENS = os.getenv("BOT_TOKENS", "7341876935:AAGA0OsJjpGgWHnGK_MKMWoWpKRfkDgushI").strip(", ").split(",")
 BOT_TOKENS = [token.strip() for token in BOT_TOKENS if token.strip() != ""]
 BOT_TOKENSX = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ").strip(", ").split(",")
