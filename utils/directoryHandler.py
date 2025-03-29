@@ -13,7 +13,7 @@ client = MongoClient(mongo_uri)
 db = client.tg_drive  # Database name
 drive_data_collection = db.drive_data  # Collection name
 
-
+drive_data_collectionx = db.drive_ids
 def getRandomID(length=15):
     while True:
         # Generate a random ID
@@ -21,10 +21,10 @@ def getRandomID(length=15):
         print("Generated ID:", id)
 
         # Retrieve or initialize the document
-        document = drive_data_collection.find_one({})
+        document = drive_data_collectionx.find_one({})
         if not document:
             # If no document exists, create one with an empty 'used_ids' array
-            drive_data_collection.insert_one({"used_ids": []})
+            drive_data_collectionx.insert_one({"used_ids": []})
             document = {"used_ids": []}
 
         # Check if the ID already exists in 'used_ids'
@@ -32,7 +32,7 @@ def getRandomID(length=15):
         if id not in used_ids:
             # Append the new ID and update the database
             used_ids.append(id)
-            drive_data_collection.update_one(
+            drive_data_collectionx.update_one(
                 {}, 
                 {"$set": {"used_ids": used_ids}}, 
                 upsert=True
