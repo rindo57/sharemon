@@ -158,7 +158,7 @@ async def start():
         await asyncio.sleep(3)
         logger.info("Waiting for DRIVE_DATA to be initialized...")
 
-    max_concurrent_tasks = len(BOT_TOKENS)
+    max_concurrent_tasks = 1
     logger.info(f"Maximum concurrent upload tasks set to: {max_concurrent_tasks}")
 
     global RUNNING_IDS, TOTAL_UPLOAD
