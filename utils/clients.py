@@ -98,7 +98,7 @@ async def initialize_clients2():
     session_cache_path = Path(f"./cache")
     session_cache_path.parent.mkdir(parents=True, exist_ok=True)
 
-    all_tokens = dict((i, t) for i, t in enumerate(config.BOT_TOKENS, start=1))
+    all_tokens = dict((i, t) for i, t in enumerate(config.BOT_TOKENSX, start=1))
     all_sessions = dict(
         (i, s) for i, s in enumerate(config.STRING_SESSIONS, start=len(all_tokens) + 1)
     )
