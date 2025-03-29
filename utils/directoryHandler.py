@@ -19,6 +19,18 @@ def getRandomID(length=15):
         id = "".join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=length))
         print("before ", id)
         # Check if ID already exists
+        document = drive_data_collection.find_one({})
+        if document:
+            used_ids = document.get("used_ids", [])
+            used_ids.append(id)
+            drive_data_collection.update_one(
+                {}, 
+                {"$set": {"used_ids": used_ids}}, 
+                upsert=True
+            )
+            print("after ", id)
+            return id
+'''
         if not drive_data_collection.find_one({"used_ids": id}):
             # Use upsert to ensure document creation if not found
             result = drive_data_collection.update_one(
@@ -29,7 +41,7 @@ def getRandomID(length=15):
             if result.modified_count > 0 or result.upserted_id is not None:
                 print("after ", id)
                 return id
-
+'''
 def get_current_utc_time():
     return datetime.now(timezone.utc).strftime("Date - %Y-%m-%d | Time - %H:%M:%S")
 
