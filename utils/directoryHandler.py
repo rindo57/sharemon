@@ -17,6 +17,7 @@ drive_data_collection = db.drive_data  # Collection name
 def getRandomID(length=15):
     while True:
         id = "".join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=length))
+        print('before ", id)
         # Check if ID already exists
         if not drive_data_collection.find_one({"used_ids": id}):
             # Use upsert to ensure document creation if not found
@@ -26,6 +27,7 @@ def getRandomID(length=15):
                 upsert=True
             )
             if result.modified_count > 0 or result.upserted_id is not None:
+                print("after ", id)
                 return id
 
 def get_current_utc_time():
