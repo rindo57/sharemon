@@ -183,15 +183,15 @@ class File:
         )
 
 class NewDriveData:
-    def __init__(self, contents: dict, used_ids: list) -> None:
+    def __init__(self, contents: dict) -> None:
         self.contents = contents
-        self.used_ids = used_ids
+        #self.used_ids = used_ids
         self.isUpdated = False
 
     def to_dict(self):
         return {
             "contents": {k: v.to_dict() for k, v in self.contents.items()},
-            "used_ids": self.used_ids,
+           # "used_ids": self.used_ids,
             "isUpdated": self.isUpdated,
         }
 
@@ -199,7 +199,7 @@ class NewDriveData:
     def from_dict(cls, data):
         # Ensure contents is not missing or empty
         contents = {k: Folder.from_dict(v) for k, v in data["contents"].items()}
-        return cls(contents, data["used_ids"])
+        return cls(contents)
         
     def save(self) -> None:
         drive_data_collection.replace_one({}, self.to_dict(), upsert=True)
