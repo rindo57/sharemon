@@ -100,7 +100,7 @@ def initialize_cipher(key, iv, adata, tagsize):
 
 class PrivateBin:
     def __init__(self, message):
-        self._server = "https://paste.i2pd.xyz/"
+        self._server = "https://0.0g.gg/"
         self._version = 2
         self._compression = 'zlib'
         self._data = ''
