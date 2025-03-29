@@ -12,6 +12,9 @@ API_HASH="96b46175824223a33737657ab943fd6a"
 BOT_TOKENS = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ, 8041824577:AAGSvtr0zs5QYTSvtFdfg_0-yPLmGpnOZtE, 8011406064:AAGnj7QXMKZoGCU2hpcXmfyj9VahagDhUjU, 7997139947:AAGO65cenV2FdkCsi8VqWNGTx5IA7GpND2o, 7728065653:AAEYYuw8vxPXovb4ImEI2FqEzV8jFqiEtVE").strip(", ").split(",")
 #BOT_TOKENS = os.getenv("BOT_TOKENS", "7341876935:AAGA0OsJjpGgWHnGK_MKMWoWpKRfkDgushI").strip(", ").split(",")
 BOT_TOKENS = [token.strip() for token in BOT_TOKENS if token.strip() != ""]
+BOT_TOKENSX = os.getenv("BOT_TOKENS", "6769415354:AAHh7IfKn11PWuNxUo0qmoIuW7NclxaaFHQ").strip(", ").split(",")
+#BOT_TOKENS = os.getenv("BOT_TOKENS", "7341876935:AAGA0OsJjpGgWHnGK_MKMWoWpKRfkDgushI").strip(", ").split(",")
+BOT_TOKENSX = [token.strip() for token in BOT_TOKENS if token.strip() != ""]
 
 # List of Premium Telegram Account Pyrogram String Sessions used for file upload/download operations
 STRING_SESSIONS = os.getenv("STRING_SESSIONS", "").strip(", ").split(",")
