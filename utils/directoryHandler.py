@@ -13,12 +13,21 @@ client = MongoClient(mongo_uri)
 db = client.tg_drive  # Database name
 drive_data_collection = db.drive_data  # Collection name
 
+
 def getRandomID(length=15):
     while True:
         id = "".join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=length))
+        # Check if ID already exists
         if not drive_data_collection.find_one({"used_ids": id}):
-            drive_data_collection.update_one({}, {"$push": {"used_ids": id}})
-            return id
+            # Use upsert to ensure document creation if not found
+            result = drive_data_collection.update_one(
+                {}, 
+                {"$push": {"used_ids": id}}, 
+                upsert=True
+            )
+            if result.modified_count > 0 or result.upserted_id is not None:
+                return id
+
 def get_current_utc_time():
     return datetime.now(timezone.utc).strftime("Date - %Y-%m-%d | Time - %H:%M:%S")
 
